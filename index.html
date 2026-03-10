@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Congreso Internacional · Mapa Interactivo · Buenos Aires</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --navy: #0B1F3A;
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --cream: #F5F0E8;
+    --white: #FFFFFF;
+    --slate: #4A5568;
+    --muted: #8A97A8;
+    --sede-a: #1A6B5A;
+    --sede-b: #1A3F6B;
+    --metro: #D4462A;
+    --cultura: #7A3C8E;
+    --zona: #2A7A6E;
+    --shadow: 0 4px 24px rgba(11,31,58,0.14);
+    --shadow-lg: 0 12px 48px rgba(11,31,58,0.22);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--navy);
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1200;
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+    gap: 16px;
+  }
+
+  .topbar-logo {
+    display: flex; align-items: center; gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .topbar-emblem {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .topbar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .topbar-title span {
+    display: block;
+    font-size: 10px;
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .topbar-divider {
+    width: 1px; height: 28px;
+    background: rgba(201,168,76,0.25);
+  }
+
+  .topbar-tags {
+    display: flex; gap: 8px;
+    flex: 1;
+  }
+
+  .topbar-tag {
+    font-size: 11px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 3px 10px;
+    letter-spacing: 0.04em;
+  }
+
+  .topbar-lang {
+    display: flex; gap: 6px;
+  }
+
+  .lang-btn {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(201,168,76,0.3);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .lang-btn.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy);
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    position: fixed;
+    top: 56px; left: 0; bottom: 0;
+    width: 320px;
+    background: var(--cream);
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-right: 1px solid rgba(11,31,58,0.1);
+  }
+
+  /* Layer Controls */
+  .sidebar-section {
+    padding: 16px;
+    border-bottom: 1px solid rgba(11,31,58,0.08);
+  }
+
+  .sidebar-section-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .layer-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 4px;
+    user-select: none;
+  }
+
+  .layer-toggle:hover { background: rgba(11,31,58,0.05); }
+
+  .layer-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .layer-label {
+    font-size: 13px;
+    font-weight: 500;
+    flex: 1;
+    color: var(--navy);
+  }
+
+  .layer-count {
+    font-size: 11px;
+    color: var(--muted);
+    background: rgba(11,31,58,0.08);
+    padding: 2px 7px;
+    border-radius: 10px;
+  }
+
+  .toggle-switch {
+    width: 34px; height: 18px;
+    background: #CBD5E0;
+    border-radius: 9px;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: white;
+    top: 2px; left: 2px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .toggle-switch.on { background: var(--gold); }
+  .toggle-switch.on::after { transform: translateX(16px); }
+
+  /* Info Panel */
+  #info-panel {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  #info-panel::-webkit-scrollbar { width: 4px; }
+  #info-panel::-webkit-scrollbar-track { background: transparent; }
+  #info-panel::-webkit-scrollbar-thumb { background: rgba(11,31,58,0.15); border-radius: 2px; }
+
+  .info-card {
+    padding: 16px;
+    border-bottom: 1px solid rgba(11,31,58,0.08);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .info-card:hover { background: rgba(11,31,58,0.04); }
+  .info-card.selected { background: rgba(201,168,76,0.12); border-left: 3px solid var(--gold); }
+
+  .card-header {
+    display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px;
+  }
+
+  .card-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1.3;
+  }
+
+  .card-category {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .card-detail {
+    font-size: 12px;
+    color: var(--slate);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .card-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── MAP ── */
+  #map {
+    position: fixed;
+    top: 56px;
+    left: 320px;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+  }
+
+  /* ── POPUP ── */
+  .custom-popup .leaflet-popup-content-wrapper {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    border: none;
+    padding: 0;
+    overflow: hidden;
+    min-width: 260px;
+    max-width: 300px;
+  }
+
+  .custom-popup .leaflet-popup-tip { background: var(--white); }
+  .custom-popup .leaflet-popup-content { margin: 0; }
+
+  .popup-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid rgba(11,31,58,0.08);
+  }
+
+  .popup-type {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .popup-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--navy);
+    line-height: 1.3;
+  }
+
+  .popup-body {
+    padding: 12px 16px;
+  }
+
+  .popup-row {
+    display: flex; gap: 8px;
+    font-size: 12px;
+    color: var(--slate);
+    margin-bottom: 6px;
+    align-items: flex-start;
+  }
+
+  .popup-row-icon { flex-shrink: 0; margin-top: 1px; }
+
+  .popup-tags {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .popup-tag {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .popup-btn {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-decoration: none;
+    transition: opacity 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .popup-btn:hover { opacity: 0.88; }
+
+  /* ── CUSTOM MARKERS ── */
+  .marker-pin {
+    width: 36px; height: 36px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+    border: 2px solid white;
+  }
+
+  .marker-pin span {
+    transform: rotate(45deg);
+    font-size: 16px;
+  }
+
+  /* ── LEGEND ── */
+  #legend {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 14px 16px;
+    z-index: 1100;
+    box-shadow: var(--shadow);
+    min-width: 180px;
+  }
+
+  .legend-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .legend-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px;
+    color: var(--slate);
+    margin-bottom: 6px;
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── ITINERARY PANEL ── */
+  #itinerary-panel {
+    position: fixed;
+    bottom: 24px;
+    left: 340px;
+    background: rgba(11,31,58,0.96);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 14px 18px;
+    z-index: 1100;
+    box-shadow: var(--shadow-lg);
+    max-width: 340px;
+    border: 1px solid rgba(201,168,76,0.25);
+    display: none;
+  }
+
+  #itinerary-panel.show { display: block; }
+
+  .itin-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .itin-steps {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .itin-step {
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+
+  .itin-num {
+    width: 20px; height: 20px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--navy);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .itin-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.4;
+  }
+
+  .itin-close {
+    position: absolute;
+    top: 10px; right: 12px;
+    background: none; border: none;
+    color: var(--muted); cursor: pointer; font-size: 16px;
+  }
+
+  /* Mobile hint */
+  .mobile-hint {
+    position: fixed;
+    top: 68px; right: 16px;
+    font-size: 11px;
+    color: var(--muted);
+    z-index: 1100;
+    background: rgba(255,255,255,0.92);
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    #sidebar { width: 100%; top: 56px; bottom: 0; left: -100%; transition: left 0.3s; }
+    #sidebar.open { left: 0; }
+    #map { left: 0; }
+    .mobile-hint { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="topbar-logo">
+    <div class="topbar-emblem">🌐</div>
+    <div class="topbar-title">
+      XIX Congreso Internacional de ALADAA
+      <span>Buenos Aires · 2026 · Guía de Navegación</span>
+    </div>
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-tags">
+    <span class="topbar-tag">🏛 4 Sedes</span>
+    <span class="topbar-tag">🚇 Subte</span>
+    <span class="topbar-tag">🎭 Cultura</span>
+    <span class="topbar-tag">📍 5 Capas</span>
+  </div>
+  <div class="topbar-lang">
+    <button class="lang-btn active" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+
+  <!-- Layer Controls -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title" data-es="Capas del mapa" data-en="Map Layers">Capas del mapa</div>
+
+    <div class="layer-toggle" onclick="toggleLayer('aeropuertos')">
+      <div class="layer-dot" style="background:#B45309"></div>
+      <span class="layer-label" data-es="Aeropuertos" data-en="Airports">Aeropuertos</span>
+      <span class="layer-count">2</span>
+      <div class="toggle-switch on" id="sw-aeropuertos"></div>
+    </div>
+
+    <div class="layer-toggle" onclick="toggleLayer('sedes')">
+      <div class="layer-dot" style="background:#1A6B5A"></div>
+      <span class="layer-label" data-es="Sedes del Congreso" data-en="Congress Venues">Sedes del Congreso</span>
+      <span class="layer-count">4</span>
+      <div class="toggle-switch on" id="sw-sedes"></div>
+    </div>
+
+    <div class="layer-toggle" onclick="toggleLayer('metro')">
+      <div class="layer-dot" style="background:#D4462A"></div>
+      <span class="layer-label" data-es="Estaciones de Subte" data-en="Subway Stations">Estaciones de Subte</span>
+      <span class="layer-count">5</span>
+      <div class="toggle-switch on" id="sw-metro"></div>
+    </div>
+
+    <div class="layer-toggle" onclick="toggleLayer('cultura')">
+      <div class="layer-dot" style="background:#7A3C8E"></div>
+      <span class="layer-label" data-es="Puntos Culturales" data-en="Cultural Points">Puntos Culturales</span>
+      <span class="layer-count">5</span>
+      <div class="toggle-switch on" id="sw-cultura"></div>
+    </div>
+
+    <div class="layer-toggle" onclick="toggleLayer('zonas')">
+      <div class="layer-dot" style="background:#2A7A6E"></div>
+      <span class="layer-label" data-es="Zonas de Interés" data-en="Urban Zones">Zonas de Interés</span>
+      <span class="layer-count">3</span>
+      <div class="toggle-switch on" id="sw-zonas"></div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title" data-es="Itinerarios sugeridos" data-en="Suggested Itineraries">Itinerarios sugeridos</div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <button onclick="showItinerary('cultural')" style="text-align:left;padding:9px 12px;border-radius:8px;border:1px solid rgba(11,31,58,0.12);background:white;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;color:#0B1F3A;font-weight:500;">
+        🎭 <span data-es="Tour Cultural Noche (3h)" data-en="Evening Cultural Tour (3h)">Tour Cultural Noche (3h)</span>
+      </button>
+      <button onclick="showItinerary('gastronomico')" style="text-align:left;padding:9px 12px;border-radius:8px;border:1px solid rgba(11,31,58,0.12);background:white;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;color:#0B1F3A;font-weight:500;">
+        🍽️ <span data-es="Palermo y Barrio Chino (2h)" data-en="Palermo & Chinatown (2h)">Palermo y Barrio Chino (2h)</span>
+      </button>
+      <button onclick="showItinerary('oriental')" style="text-align:left;padding:9px 12px;border-radius:8px;border:1px solid rgba(11,31,58,0.12);background:white;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;color:#0B1F3A;font-weight:500;">
+        🌏 <span data-es="Ruta Oriental BA (4h)" data-en="BA Oriental Route (4h)">Ruta Oriental BA (4h)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Points List -->
+  <div id="info-panel">
+    <!-- Cards injected via JS -->
+  </div>
+</div>
+
+<!-- MAP -->
+<div id="map"></div>
+
+<!-- LEGEND -->
+<div id="legend">
+  <div class="legend-title" data-es="Referencia" data-en="Legend">Referencia</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1A6B5A"></div><span data-es="Sede A – Belgrano" data-en="Venue A – Belgrano">Sede A – Belgrano</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1A3F6B"></div><span data-es="Sede B – Austral Centro" data-en="Venue B – Austral Centro">Sede B – Austral Centro</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#5B2D8E"></div><span data-es="Sede C – Casa UNLP" data-en="Venue C – Casa UNLP">Sede C – Casa UNLP</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#C0392B"></div><span data-es="Sede D – UBA Cs. Sociales" data-en="Venue D – UBA Social Sciences">Sede D – UBA Cs. Sociales</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#D4462A"></div><span data-es="Estación Subte" data-en="Subway Station">Estación Subte</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7A3C8E"></div><span data-es="Punto Cultural" data-en="Cultural Point">Punto Cultural</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#2A7A6E"></div><span data-es="Zona de Interés" data-en="Urban Zone">Zona de Interés</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#B45309"></div><span data-es="Aeropuerto" data-en="Airport">Aeropuerto</span></div>
+</div>
+
+<!-- ITINERARY PANEL -->
+<div id="itinerary-panel">
+  <button class="itin-close" onclick="document.getElementById('itinerary-panel').classList.remove('show')">✕</button>
+  <div class="itin-title" id="itin-title">Itinerario</div>
+  <div class="itin-steps" id="itin-steps"></div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const LANG = { current: 'es' };
+
+const POINTS = {
+  sedes: [
+    {
+      id: 'sede-belgrano',
+      nameEs: 'Universidad de Belgrano',
+      nameEn: 'Universidad de Belgrano',
+      lat: -34.5639,
+      lng: -58.4438,
+      color: '#1A6B5A',
+      icon: '🏛',
+      address: 'Zabala 1837, Buenos Aires',
+      typeEs: 'Sede A del Congreso',
+      typeEn: 'Congress Venue A',
+      descEs: 'Sede principal del congreso. Alberga las sesiones plenarias, paneles de apertura y recepción de delegaciones internacionales.',
+      descEn: 'Main congress venue. Hosts plenary sessions, opening panels and reception of international delegations.',
+      metroEs: 'Línea D – Est. Juramento (800m, ~10 min a pie)',
+      metroEn: 'Line D – Juramento Station (800m, ~10 min walk)',
+      tagsEs: ['Sesiones Plenarias', 'Acreditaciones', 'Recepción'],
+      tagsEn: ['Plenary Sessions', 'Accreditation', 'Reception'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Universidad+de+Belgrano+Zabala+1837+Buenos+Aires'
+    },
+    {
+      id: 'sede-austral',
+      nameEs: 'Universidad Austral – Sede Centro',
+      nameEn: 'Universidad Austral – Downtown',
+      lat: -34.5935,
+      lng: -58.3830,
+      color: '#1A3F6B',
+      icon: '🏫',
+      address: 'Cerrito 1250, Buenos Aires',
+      typeEs: 'Sede B del Congreso',
+      typeEn: 'Congress Venue B',
+      descEs: 'Sede B. Concentra talleres técnicos, mesas de trabajo y presentación de ponencias en el microcentro porteño.',
+      descEn: 'Venue B. Hosts technical workshops, working tables and paper presentations in the downtown area.',
+      metroEs: 'Línea D – Est. Callao (600m, ~8 min a pie)',
+      metroEn: 'Line D – Callao Station (600m, ~8 min walk)',
+      tagsEs: ['Talleres', 'Ponencias', 'Microcentro'],
+      tagsEn: ['Workshops', 'Papers', 'Downtown'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Universidad+Austral+Cerrito+1250+Buenos+Aires'
+    },
+    {
+      id: 'sede-unlp',
+      nameEs: 'Casa UNLP – Universidad Nacional de La Plata',
+      nameEn: 'Casa UNLP – National University of La Plata',
+      lat: -34.6072,
+      lng: -58.3918,
+      color: '#5B2D8E',
+      icon: '🎓',
+      address: 'Ayacucho 132, Buenos Aires',
+      typeEs: 'Sede C del Congreso',
+      typeEn: 'Congress Venue C',
+      descEs: 'Sede C. Representación porteña de la UNLP. Alberga paneles temáticos y actividades académicas del congreso.',
+      descEn: 'Venue C. Buenos Aires representation of UNLP. Hosts thematic panels and academic congress activities.',
+      metroEs: 'Línea D – Est. Callao (700m, ~9 min a pie) · Línea B – Est. Callao (400m, ~5 min)',
+      metroEn: 'Line D – Callao Station (700m, ~9 min walk) · Line B – Callao Station (400m, ~5 min)',
+      tagsEs: ['Paneles', 'UNLP', 'Sede C'],
+      tagsEn: ['Panels', 'UNLP', 'Venue C'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Ayacucho+132+Buenos+Aires+Argentina'
+    },
+    {
+      id: 'sede-uba',
+      nameEs: 'UBA – Facultad de Ciencias Sociales',
+      nameEn: 'UBA – Faculty of Social Sciences',
+      lat: -34.6005,
+      lng: -58.4010,
+      color: '#C0392B',
+      icon: '🏛',
+      address: 'Santiago del Estero 1029 / Uriburu 950, Buenos Aires',
+      typeEs: 'Sede D del Congreso',
+      typeEn: 'Congress Venue D',
+      descEs: 'Sede D. Una de las facultades más grandes de América Latina. Alberga conferencias, mesas interdisciplinarias y actividades paralelas del congreso.',
+      descEn: 'Venue D. One of the largest faculties in Latin America. Hosts conferences, interdisciplinary panels and parallel congress activities.',
+      metroEs: 'Línea D – Est. Callao (900m, ~11 min a pie) · Línea H – Est. Once (600m, ~8 min)',
+      metroEn: 'Line D – Callao Station (900m, ~11 min walk) · Line H – Once Station (600m, ~8 min)',
+      tagsEs: ['Conferencias', 'UBA', 'Sede D'],
+      tagsEn: ['Conferences', 'UBA', 'Venue D'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Uriburu+950+Buenos+Aires+Argentina'
+    }
+  ],
+  metro: [
+    {
+      id: 'metro-juramento',
+      nameEs: 'Juramento',
+      nameEn: 'Juramento',
+      lat: -34.5624,
+      lng: -58.4563,
+      color: '#D4462A',
+      icon: '🚇',
+      typeEs: 'Estación de Subte',
+      typeEn: 'Subway Station',
+      descEs: 'Línea D (verde). A 800m de la Sede A (U. Belgrano). Referencia: Av. Cabildo. Horario: 5:30–23:30.',
+      descEn: 'Line D (green). 800m from Venue A (U. Belgrano). Reference: Av. Cabildo. Hours: 5:30am–11:30pm.',
+      tagsEs: ['Línea D', '~10 min caminando', 'Sede A'],
+      tagsEn: ['Line D', '~10 min walk', 'Venue A'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Subte+Juramento+Buenos+Aires'
+    },
+    {
+      id: 'metro-barrancas',
+      nameEs: 'Barrancas de Belgrano',
+      nameEn: 'Barrancas de Belgrano',
+      lat: -34.5572,
+      lng: -58.4559,
+      color: '#D4462A',
+      icon: '🚇',
+      typeEs: 'Estación de Subte',
+      typeEn: 'Subway Station',
+      descEs: 'Línea D (verde). A 1.1km de la Sede A. Próxima al Barrio Chino de Belgrano. Horario: 5:30–23:30.',
+      descEn: 'Line D (green). 1.1km from Venue A. Near Belgrano Chinatown. Hours: 5:30am–11:30pm.',
+      tagsEs: ['Línea D', 'Barrio Chino', 'Sede A'],
+      tagsEn: ['Line D', 'Chinatown', 'Venue A'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Barrancas+de+Belgrano+Subte+Buenos+Aires'
+    },
+    {
+      id: 'metro-callao',
+      nameEs: 'Callao',
+      nameEn: 'Callao',
+      lat: -34.5996,
+      lng: -58.3929,
+      color: '#D4462A',
+      icon: '🚇',
+      typeEs: 'Estación de Subte',
+      typeEn: 'Subway Station',
+      descEs: 'Línea D (verde). A 600m de la Sede B (U. Austral). Referencia: Cruce Av. Callao–Av. Córdoba. Horario: 5:30–23:30.',
+      descEn: 'Line D (green). 600m from Venue B (U. Austral). Reference: Callao–Córdoba avenues crossing. Hours: 5:30am–11:30pm.',
+      tagsEs: ['Línea D', '~8 min caminando', 'Sede B'],
+      tagsEn: ['Line D', '~8 min walk', 'Venue B'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Subte+Callao+Linea+D+Buenos+Aires'
+    },
+    {
+      id: 'metro-tribunales',
+      nameEs: 'Tribunales',
+      nameEn: 'Tribunales',
+      lat: -34.6023,
+      lng: -58.3812,
+      color: '#D4462A',
+      icon: '🚇',
+      typeEs: 'Estación de Subte',
+      typeEn: 'Subway Station',
+      descEs: 'Línea D (verde). A 900m de la Sede B. Próxima al Teatro Colón y Tribunales. Horario: 5:30–23:30.',
+      descEn: 'Line D (green). 900m from Venue B. Near Teatro Colón and courts. Hours: 5:30am–11:30pm.',
+      tagsEs: ['Línea D', 'Teatro Colón', 'Sede B'],
+      tagsEn: ['Line D', 'Teatro Colón', 'Venue B'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Subte+Tribunales+Buenos+Aires'
+    },
+    {
+      id: 'metro-plaza-italia',
+      nameEs: 'Plaza Italia',
+      nameEn: 'Plaza Italia',
+      lat: -34.5791,
+      lng: -58.4198,
+      color: '#D4462A',
+      icon: '🚇',
+      typeEs: 'Estación de Subte',
+      typeEn: 'Subway Station',
+      descEs: 'Línea D (verde). Hub de acceso a Palermo, Jardín Japonés y Jardín Botánico. Horario: 5:30–23:30.',
+      descEn: 'Line D (green). Gateway to Palermo, Japanese Garden and Botanical Garden. Hours: 5:30am–11:30pm.',
+      tagsEs: ['Línea D', 'Palermo', 'Jardín Japonés'],
+      tagsEn: ['Line D', 'Palermo', 'Japanese Garden'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Subte+Plaza+Italia+Buenos+Aires'
+    }
+  ],
+  cultura: [
+    {
+      id: 'museo-etnografico',
+      nameEs: 'Museo Etnográfico J.B. Ambrosetti',
+      nameEn: 'Ethnographic Museum J.B. Ambrosetti',
+      lat: -34.6113,
+      lng: -58.3712,
+      color: '#7A3C8E',
+      icon: '🏺',
+      address: 'Moreno 350, Buenos Aires',
+      typeEs: 'Museo / Investigación',
+      typeEn: 'Museum / Research',
+      descEs: 'Depende de la UBA. Investigación y difusión de patrimonio histórico y antropológico americano. Entrada libre.',
+      descEn: 'Part of UBA. Research and dissemination of American historical and anthropological heritage. Free entry.',
+      distBelgranoEs: '5.6 km desde Sede A',
+      distAustralEs: '2.1 km desde Sede B',
+      tagsEs: ['Museo', 'Gratuito', 'Amerindio'],
+      tagsEn: ['Museum', 'Free', 'Amerindian'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Museo+Etnografico+Moreno+350+Buenos+Aires'
+    },
+    {
+      id: 'museo-oriental',
+      nameEs: 'Museo Nacional de Arte Oriental',
+      nameEn: 'National Museum of Oriental Art',
+      lat: -34.5996,
+      lng: -58.3743,
+      color: '#7A3C8E',
+      icon: '🎎',
+      address: 'Viamonte 525, 2° piso, Pabellón 3 – C. C. Borges',
+      typeEs: 'Museo',
+      typeEn: 'Museum',
+      descEs: '+3.000 piezas de China, Japón, India, Corea y Tailandia. Exhibiciones, talleres y seminarios de cultura oriental. Entrada libre.',
+      descEn: '+3,000 pieces from China, Japan, India, Korea and Thailand. Exhibitions, workshops and oriental culture seminars. Free entry.',
+      distBelgranoEs: '3.8 km desde Sede A',
+      distAustralEs: '0.9 km desde Sede B',
+      tagsEs: ['Museo', 'Gratuito', 'Asia', 'Tailandia'],
+      tagsEn: ['Museum', 'Free', 'Asia', 'Thailand'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Museo+Nacional+Arte+Oriental+Viamonte+525+Buenos+Aires'
+    },
+    {
+      id: 'mezquita-fahd',
+      nameEs: 'Centro Islámico Rey Fahd',
+      nameEn: 'King Fahd Islamic Cultural Center',
+      lat: -34.5725,
+      lng: -58.4244,
+      color: '#7A3C8E',
+      icon: '🕌',
+      address: 'Av. Int. Bullrich 55, Buenos Aires',
+      typeEs: 'Espacio Religioso / Cultural',
+      typeEn: 'Religious / Cultural Space',
+      descEs: 'La mezquita más grande de América Latina, inaugurada en 2000. Biblioteca islámica, museo y escuela. Visitas guiadas disponibles.',
+      descEn: 'Largest mosque in Latin America, inaugurated in 2000. Islamic library, museum and school. Guided tours available.',
+      distBelgranoEs: '1.5 km desde Sede A',
+      distAustralEs: '4.9 km desde Sede B',
+      tagsEs: ['Mezquita', 'Palermo', 'MENA'],
+      tagsEn: ['Mosque', 'Palermo', 'MENA'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Centro+Islamico+Rey+Fahd+Buenos+Aires'
+    },
+    {
+      id: 'jardin-japones',
+      nameEs: 'Jardín Japonés',
+      nameEn: 'Japanese Garden',
+      lat: -34.5746,
+      lng: -58.4098,
+      color: '#7A3C8E',
+      icon: '⛩️',
+      address: 'Av. Casares 3450, Palermo',
+      typeEs: 'Parque Cultural',
+      typeEn: 'Cultural Park',
+      descEs: 'Fundado en 1967 por la colectividad japonesa. Koi, puentes, origami, restaurant y exposiciones de cultura japonesa. Entrada paga.',
+      descEn: 'Founded in 1967 by the Japanese community. Koi ponds, bridges, origami, restaurant and Japanese cultural exhibitions. Paid entry.',
+      distBelgranoEs: '2.1 km desde Sede A',
+      distAustralEs: '3.5 km desde Sede B',
+      tagsEs: ['Parque', 'Japón', 'Palermo', 'Abierto diario'],
+      tagsEn: ['Park', 'Japan', 'Palermo', 'Open daily'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Jardin+Japones+Buenos+Aires'
+    },
+    {
+      id: 'barrio-chino',
+      nameEs: 'Barrio Chino de Buenos Aires',
+      nameEn: 'Buenos Aires Chinatown',
+      lat: -34.5553,
+      lng: -58.4525,
+      color: '#7A3C8E',
+      icon: '🏮',
+      address: 'Arribeños y Olazábal, Belgrano',
+      typeEs: 'Barrio Cultural',
+      typeEn: 'Cultural District',
+      descEs: 'El único barrio chino oficial de Argentina, activo desde los años 80. Gastronomía asiática, supermercados, templos y festividades del Año Nuevo Lunar.',
+      descEn: 'Argentina\'s only official Chinatown, active since the 1980s. Asian food, supermarkets, temples and Lunar New Year festivities.',
+      distBelgranoEs: '0.9 km desde Sede A',
+      distAustralEs: '5.9 km desde Sede B',
+      tagsEs: ['Barrio', 'Gastronomía', 'Belgrano', 'Asia'],
+      tagsEn: ['District', 'Food', 'Belgrano', 'Asia'],
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Barrio+Chino+Buenos+Aires+Belgrano'
+    }
+  ],
+  zonas: [
+    { id: 'z-belgrano', lat: -34.5639, lng: -58.4438, radius: 700, color: '#2A7A6E', nameEs: 'Zona Belgrano', nameEn: 'Belgrano Zone', descEs: 'Barrio residencial de alto nivel. Sede A del congreso. Barrio Chino, Barrancas, gastronomía variada.' , descEn: 'Upscale residential neighborhood. Congress Venue A. Chinatown, Barrancas, diverse dining.' },
+    { id: 'z-palermo', lat: -34.5770, lng: -58.4160, radius: 800, color: '#2A7A6E', nameEs: 'Zona Palermo', nameEn: 'Palermo Zone', descEs: 'Barrio cosmopolita. Jardín Japonés, Mezquita Rey Fahd, restaurantes, hoteles boutique.' , descEn: 'Cosmopolitan neighborhood. Japanese Garden, King Fahd Mosque, restaurants, boutique hotels.' },
+    { id: 'z-microcentro', lat: -34.5935, lng: -58.3830, radius: 600, color: '#2A7A6E', nameEs: 'Microcentro / Recoleta', nameEn: 'Downtown / Recoleta', descEs: 'Sede B del congreso. Teatro Colón, MALBA, Cementerio de Recoleta, hoteles internacionales.' , descEn: 'Congress Venue B. Teatro Colón, MALBA, Recoleta Cemetery, international hotels.' }
+  ],
+  aeropuertos: [
+    {
+      id: 'aero-ezeiza',
+      nameEs: 'Aeropuerto Internacional Ezeiza (EZE)',
+      nameEn: 'Ezeiza International Airport (EZE)',
+      lat: -34.8165,
+      lng: -58.5372,
+      color: '#B45309',
+      icon: '✈️',
+      address: 'Autopista Riccheri Km 33.5, Ezeiza',
+      typeEs: 'Aeropuerto Internacional',
+      typeEn: 'International Airport',
+      descEs: 'Principal aeropuerto internacional de Argentina. A ~35km del centro. Vuelos intercontinentales y regionales.',
+      descEn: 'Argentina\'s main international airport. ~35km from downtown. Intercontinental and regional flights.',
+      tagsEs: ['Internacional', 'EZE', '~35km del centro'],
+      tagsEn: ['International', 'EZE', '~35km from downtown'],
+      transporteEs: `<div style="font-family:'DM Sans',sans-serif;padding:0">
+        <div style="font-size:13px;font-weight:700;color:#0B1F3A;margin-bottom:10px">🚌 Cómo llegar al centro</div>
+        <div style="margin-bottom:10px;padding:10px;background:#FEF3C7;border-radius:8px;border-left:3px solid #B45309">
+          <div style="font-size:12px;font-weight:600;color:#92400E">🚌 Manuel Tienda León (recomendado)</div>
+          <div style="font-size:11px;color:#78350F;margin-top:4px">Bus ejecutivo directo hasta Terminal Madero (Puerto Madero) y Retiro. Salidas cada 30 min aprox. Duración: 45–60 min según tráfico. Precio: ~USD 15–18. Ticket en el aeropuerto, planta baja llegadas.</div>
+        </div>
+        <div style="margin-bottom:10px;padding:10px;background:#F0FDF4;border-radius:8px;border-left:3px solid #16A34A">
+          <div style="font-size:12px;font-weight:600;color:#15803D">🚌 Bus Urbano 8 (económico)</div>
+          <div style="font-size:11px;color:#166534;margin-top:4px">Línea 8 desde parada frente al aeropuerto hasta Constitución / Once. Duración: 1h 30min–2h. Requiere tarjeta SUBE. Precio: ~$300 ARS.</div>
+        </div>
+        <div style="margin-bottom:10px;padding:10px;background:#EFF6FF;border-radius:8px;border-left:3px solid #1D4ED8">
+          <div style="font-size:12px;font-weight:600;color:#1E40AF">🚕 Taxi / Remís oficial</div>
+          <div style="font-size:11px;color:#1e3a8a;margin-top:4px">Taxis oficiales en planta baja, sector llegadas. Precio estimado: $15.000–$25.000 ARS hasta el centro (varía según zona destino). Duración: 35–50 min. Evitar taxis no oficiales.</div>
+        </div>
+        <div style="padding:10px;background:#F5F3FF;border-radius:8px;border-left:3px solid #7C3AED">
+          <div style="font-size:12px;font-weight:600;color:#6D28D9">📱 Uber / Cabify</div>
+          <div style="font-size:11px;color:#4C1D95;margin-top:4px">Punto de encuentro indicado por la app, zona de estacionamiento. Precio estimado: ~$12.000–$18.000 ARS. Requiere conexión a internet en llegada.</div>
+        </div>
+      </div>`,
+      transporteEn: `<div style="font-family:'DM Sans',sans-serif;padding:0">
+        <div style="font-size:13px;font-weight:700;color:#0B1F3A;margin-bottom:10px">🚌 How to reach downtown</div>
+        <div style="margin-bottom:10px;padding:10px;background:#FEF3C7;border-radius:8px;border-left:3px solid #B45309">
+          <div style="font-size:12px;font-weight:600;color:#92400E">🚌 Manuel Tienda León (recommended)</div>
+          <div style="font-size:11px;color:#78350F;margin-top:4px">Executive bus to Terminal Madero (Puerto Madero) and Retiro. Departures every ~30 min. Duration: 45–60 min. Price: ~USD 15–18. Ticket at arrivals hall, ground floor.</div>
+        </div>
+        <div style="margin-bottom:10px;padding:10px;background:#F0FDF4;border-radius:8px;border-left:3px solid #16A34A">
+          <div style="font-size:12px;font-weight:600;color:#15803D">🚌 City Bus Line 8 (budget)</div>
+          <div style="font-size:11px;color:#166534;margin-top:4px">Line 8 from stop in front of airport to Constitución / Once. Duration: 1h 30min–2h. Requires SUBE card. Price: ~$300 ARS.</div>
+        </div>
+        <div style="margin-bottom:10px;padding:10px;background:#EFF6FF;border-radius:8px;border-left:3px solid #1D4ED8">
+          <div style="font-size:12px;font-weight:600;color:#1E40AF">🚕 Official Taxi / Remís</div>
+          <div style="font-size:11px;color:#1e3a8a;margin-top:4px">Official taxis at ground floor, arrivals area. Estimated price: $15,000–$25,000 ARS to downtown. Duration: 35–50 min. Avoid unofficial taxis.</div>
+        </div>
+        <div style="padding:10px;background:#F5F3FF;border-radius:8px;border-left:3px solid #7C3AED">
+          <div style="font-size:12px;font-weight:600;color:#6D28D9">📱 Uber / Cabify</div>
+          <div style="font-size:11px;color:#4C1D95;margin-top:4px">Pick-up point shown in-app, parking area. Estimated price: ~$12,000–$18,000 ARS. Requires internet connection on arrival.</div>
+        </div>
+      </div>`,
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Aeropuerto+Internacional+Ezeiza+Argentina'
+    },
+    {
+      id: 'aero-aeroparque',
+      nameEs: 'Aeroparque Jorge Newbery (AEP)',
+      nameEn: 'Jorge Newbery Airport (AEP)',
+      lat: -34.5590,
+      lng: -58.4157,
+      color: '#B45309',
+      icon: '✈️',
+      address: 'Av. Costanera Rafael Obligado s/n, Palermo',
+      typeEs: 'Aeropuerto Urbano',
+      typeEn: 'City Airport',
+      descEs: 'Aeropuerto urbano de la ciudad, sobre la costanera del Río de la Plata. Vuelos domésticos y regionales a países limítrofes. A ~8km del centro.',
+      descEn: 'City airport on the Río de la Plata waterfront. Domestic and regional flights to neighboring countries. ~8km from downtown.',
+      tagsEs: ['Doméstico/Regional', 'AEP', '~8km del centro', 'Palermo'],
+      tagsEn: ['Domestic/Regional', 'AEP', '~8km downtown', 'Palermo'],
+      transporteEs: `<div style="font-family:'DM Sans',sans-serif;padding:0">
+        <div style="font-size:13px;font-weight:700;color:#0B1F3A;margin-bottom:10px">🚌 Cómo llegar al centro</div>
+        <div style="margin-bottom:10px;padding:10px;background:#FEF3C7;border-radius:8px;border-left:3px solid #B45309">
+          <div style="font-size:12px;font-weight:600;color:#92400E">🚌 Manuel Tienda León</div>
+          <div style="font-size:11px;color:#78350F;margin-top:4px">Bus directo a Terminal Madero y Retiro. Ticket en el aeropuerto. Duración: 20–30 min. Precio: ~USD 8–10.</div>
+        </div>
+        <div style="margin-bottom:10px;padding:10px;background:#F0FDF4;border-radius:8px;border-left:3px solid #16A34A">
+          <div style="font-size:12px;font-weight:600;color:#15803D">🚌 Bus Urbano (colectivo)</div>
+          <div style="font-size:11px;color:#166534;margin-top:4px">Líneas 33, 37 y 45 con parada frente al aeropuerto. Conectan con Palermo, Recoleta, Microcentro. Requiere tarjeta SUBE. Duración: 25–40 min. Precio: ~$300 ARS.</div>
+        </div>
+        <div style="margin-bottom:10px;padding:10px;background:#ECFDF5;border-radius:8px;border-left:3px solid #059669">
+          <div style="font-size:12px;font-weight:600;color:#065F46">🚶 A pie hasta Subte</div>
+          <div style="font-size:11px;color:#064E3B;margin-top:4px">15 min a pie hasta est. <strong>Plaza Italia (Línea D)</strong>. Desde allí: 10 min en subte hasta Palermo o Callao (Sede B). Opción ideal para el congreso.</div>
+        </div>
+        <div style="margin-bottom:10px;padding:10px;background:#EFF6FF;border-radius:8px;border-left:3px solid #1D4ED8">
+          <div style="font-size:12px;font-weight:600;color:#1E40AF">🚕 Taxi / Remís oficial</div>
+          <div style="font-size:11px;color:#1e3a8a;margin-top:4px">Taxis oficiales en salida del aeropuerto. Precio: $4.000–$8.000 ARS al centro. Duración: 15–25 min.</div>
+        </div>
+        <div style="padding:10px;background:#F5F3FF;border-radius:8px;border-left:3px solid #7C3AED">
+          <div style="font-size:12px;font-weight:600;color:#6D28D9">📱 Uber / Cabify</div>
+          <div style="font-size:11px;color:#4C1D95;margin-top:4px">Zona de encuentro en estacionamiento del aeropuerto. Precio estimado: ~$3.500–$6.000 ARS al centro.</div>
+        </div>
+      </div>`,
+      transporteEn: `<div style="font-family:'DM Sans',sans-serif;padding:0">
+        <div style="font-size:13px;font-weight:700;color:#0B1F3A;margin-bottom:10px">🚌 How to reach downtown</div>
+        <div style="margin-bottom:10px;padding:10px;background:#FEF3C7;border-radius:8px;border-left:3px solid #B45309">
+          <div style="font-size:12px;font-weight:600;color:#92400E">🚌 Manuel Tienda León</div>
+          <div style="font-size:11px;color:#78350F;margin-top:4px">Direct bus to Terminal Madero and Retiro. Ticket at airport. Duration: 20–30 min. Price: ~USD 8–10.</div>
+        </div>
+        <div style="margin-bottom:10px;padding:10px;background:#F0FDF4;border-radius:8px;border-left:3px solid #16A34A">
+          <div style="font-size:12px;font-weight:600;color:#15803D">🚌 City Bus</div>
+          <div style="font-size:11px;color:#166534;margin-top:4px">Lines 33, 37 and 45 stop in front of the airport. Connect to Palermo, Recoleta, Downtown. Requires SUBE card. Duration: 25–40 min. Price: ~$300 ARS.</div>
+        </div>
+        <div style="margin-bottom:10px;padding:10px;background:#ECFDF5;border-radius:8px;border-left:3px solid #059669">
+          <div style="font-size:12px;font-weight:600;color:#065F46">🚶 Walk to Subway</div>
+          <div style="font-size:11px;color:#064E3B;margin-top:4px">15 min walk to <strong>Plaza Italia station (Line D)</strong>. From there: 10 min subway to Palermo or Callao (Venue B). Ideal option for congress attendees.</div>
+        </div>
+        <div style="margin-bottom:10px;padding:10px;background:#EFF6FF;border-radius:8px;border-left:3px solid #1D4ED8">
+          <div style="font-size:12px;font-weight:600;color:#1E40AF">🚕 Official Taxi / Remís</div>
+          <div style="font-size:11px;color:#1e3a8a;margin-top:4px">Official taxis at airport exit. Price: $4,000–$8,000 ARS to downtown. Duration: 15–25 min.</div>
+        </div>
+        <div style="padding:10px;background:#F5F3FF;border-radius:8px;border-left:3px solid #7C3AED">
+          <div style="font-size:12px;font-weight:600;color:#6D28D9">📱 Uber / Cabify</div>
+          <div style="font-size:11px;color:#4C1D95;margin-top:4px">Pick-up zone at airport parking area. Estimated price: ~$3,500–$6,000 ARS to downtown.</div>
+        </div>
+      </div>`,
+      gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Aeroparque+Jorge+Newbery+Buenos+Aires'
+    }
+  ]
+};
+
+const ITINERARIES = {
+  cultural: {
+    titleEs: '🎭 Tour Cultural – Tarde / Noche',
+    titleEn: '🎭 Cultural Tour – Afternoon / Evening',
+    stepsEs: [
+      'Museo Nacional de Arte Oriental – Viamonte 525 (2h, entrada libre)',
+      'Caminata por San Telmo hacia el Museo Etnográfico – Moreno 350 (1h)',
+      'Cena en el entorno del Casco Histórico – Balcarce o Defensa'
+    ],
+    stepsEn: [
+      'National Museum of Oriental Art – Viamonte 525 (2h, free)',
+      'Walk through San Telmo to Ethnographic Museum – Moreno 350 (1h)',
+      'Dinner in the Historic District – Balcarce or Defensa'
+    ]
+  },
+  gastronomico: {
+    titleEs: '🍜 Palermo & Barrio Chino',
+    titleEn: '🍜 Palermo & Chinatown',
+    stepsEs: [
+      'Jardín Japonés – Av. Casares 3450 (1h, abierto desde 10am)',
+      'Caminata por Palermo Soho – tiendas y galerías (45 min)',
+      'Almuerzo en Barrio Chino – Arribeños y Olazábal, Belgrano'
+    ],
+    stepsEn: [
+      'Japanese Garden – Av. Casares 3450 (1h, open from 10am)',
+      'Walk through Palermo Soho – shops and galleries (45 min)',
+      'Lunch in Chinatown – Arribeños & Olazábal, Belgrano'
+    ]
+  },
+  oriental: {
+    titleEs: '🌏 Ruta Oriental Buenos Aires',
+    titleEn: '🌏 Buenos Aires Oriental Route',
+    stepsEs: [
+      'Museo Nacional de Arte Oriental – apertura 14h (1h 30 min)',
+      'Centro Islámico Rey Fahd – Av. Bullrich 55 (1h, visita guiada)',
+      'Jardín Japonés – Av. Casares 3450 (1h)',
+      'Barrio Chino – cena en Arribeños, Belgrano'
+    ],
+    stepsEn: [
+      'National Museum of Oriental Art – opens 2pm (1h 30 min)',
+      'King Fahd Islamic Center – Av. Bullrich 55 (1h, guided tour)',
+      'Japanese Garden – Av. Casares 3450 (1h)',
+      'Chinatown – dinner at Arribeños, Belgrano'
+    ]
+  }
+};
+
+// ── MAP INIT ──────────────────────────────────────────────────────────────────
+const map = L.map('map', {
+  center: [-34.578, -58.418],
+  zoom: 13,
+  zoomControl: false
+});
+
+L.control.zoom({ position: 'topright' }).addTo(map);
+
+// Elegant CartoDB Positron tiles
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap © CartoDB',
+  maxZoom: 19
+}).addTo(map);
+
+// ── LAYERS ────────────────────────────────────────────────────────────────────
+const layers = { sedes: [], metro: [], cultura: [], zonas: [], aeropuertos: [] };
+const layerVisible = { sedes: true, metro: true, cultura: true, zonas: true, aeropuertos: true };
+
+function makeIcon(emoji, color) {
+  return L.divIcon({
+    html: `<div style="width:38px;height:38px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,0.35);border:2px solid white;">
+             <span style="transform:rotate(45deg);font-size:17px">${emoji}</span>
+           </div>`,
+    iconSize: [38, 48],
+    iconAnchor: [19, 48],
+    popupAnchor: [0, -50]
+  });
+}
+
+function makePopup(pt, layerKey) {
+  const lang = LANG.current;
+  const name = lang === 'en' ? pt.nameEn : pt.nameEs;
+  const type = lang === 'en' ? pt.typeEn : pt.typeEs;
+  const desc = lang === 'en' ? pt.descEn : pt.descEs;
+  const tags = lang === 'en' ? pt.tagsEn : pt.tagsEs;
+
+  let extraRows = '';
+  if (layerKey === 'sedes') {
+    const metro = lang === 'en' ? pt.metroEn : pt.metroEs;
+    extraRows += `<div class="popup-row"><span class="popup-row-icon">🚇</span><span>${metro}</span></div>`;
+    extraRows += `<div class="popup-row"><span class="popup-row-icon">📍</span><span>${pt.address}</span></div>`;
+  } else if (layerKey === 'metro') {
+    // no extra
+  } else if (layerKey === 'cultura') {
+    if (pt.address) extraRows += `<div class="popup-row"><span class="popup-row-icon">📍</span><span>${pt.address}</span></div>`;
+    const dist = lang === 'en' ? (pt.distBelgranoEs || '') : (pt.distBelgranoEs || '');
+    if (dist) extraRows += `<div class="popup-row"><span class="popup-row-icon">📏</span><span>${dist}</span></div>`;
+  }
+
+  const tagsHtml = tags ? tags.map(t => `<span class="popup-tag" style="background:${pt.color}18;color:${pt.color}">${t}</span>`).join('') : '';
+
+  const btnLabel = lang === 'en' ? '🗺 Get Directions' : '🗺 Cómo llegar';
+
+  return `
+    <div>
+      <div class="popup-header">
+        <div class="popup-type" style="color:${pt.color}">${type}</div>
+        <div class="popup-name">${name}</div>
+      </div>
+      <div class="popup-body">
+        <div class="popup-row" style="margin-bottom:8px">${desc}</div>
+        ${extraRows}
+        <div class="popup-tags">${tagsHtml}</div>
+        ${pt.gmaps ? `<a href="${pt.gmaps}" target="_blank" class="popup-btn" style="background:${pt.color};color:white">${btnLabel}</a>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// ── RENDER MARKERS ─────────────────────────────────────────────────────────────
+function renderMarkers() {
+  // Clear old
+  Object.values(layers).flat().forEach(l => map.removeLayer(l));
+  Object.keys(layers).forEach(k => layers[k] = []);
+
+  // Sedes
+  POINTS.sedes.forEach(pt => {
+    const marker = L.marker([pt.lat, pt.lng], { icon: makeIcon(pt.icon, pt.color) })
+      .bindPopup(makePopup(pt, 'sedes'), { className: 'custom-popup', maxWidth: 300 })
+      .on('click', () => selectCard(pt.id));
+    if (layerVisible.sedes) marker.addTo(map);
+    layers.sedes.push(marker);
+  });
+
+  // Metro
+  POINTS.metro.forEach(pt => {
+    const marker = L.circleMarker([pt.lat, pt.lng], {
+      radius: 9, fillColor: pt.color, color: 'white', weight: 2,
+      fillOpacity: 0.9
+    }).bindPopup(makePopup(pt, 'metro'), { className: 'custom-popup', maxWidth: 280 })
+      .on('click', () => selectCard(pt.id));
+    if (layerVisible.metro) marker.addTo(map);
+    layers.metro.push(marker);
+  });
+
+  // Cultura
+  POINTS.cultura.forEach(pt => {
+    const marker = L.marker([pt.lat, pt.lng], { icon: makeIcon(pt.icon, pt.color) })
+      .bindPopup(makePopup(pt, 'cultura'), { className: 'custom-popup', maxWidth: 300 })
+      .on('click', () => selectCard(pt.id));
+    if (layerVisible.cultura) marker.addTo(map);
+    layers.cultura.push(marker);
+  });
+
+  // Zonas
+  POINTS.zonas.forEach(pt => {
+    const circle = L.circle([pt.lat, pt.lng], {
+      radius: pt.radius, fillColor: pt.color, color: pt.color,
+      fillOpacity: 0.06, weight: 1.5, dashArray: '4 4'
+    }).bindPopup(`<div style="padding:12px;font-family:'DM Sans',sans-serif">
+      <div style="font-size:11px;font-weight:600;color:${pt.color};text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Zona de Interés</div>
+      <div style="font-size:15px;font-weight:600;color:#0B1F3A;margin-bottom:6px">${LANG.current === 'en' ? pt.nameEn : pt.nameEs}</div>
+      <div style="font-size:12px;color:#4A5568">${LANG.current === 'en' ? pt.descEn : pt.descEs}</div>
+    </div>`, { className: 'custom-popup' });
+    if (layerVisible.zonas) circle.addTo(map);
+    layers.zonas.push(circle);
+  });
+}
+
+// ── SIDEBAR CARDS ─────────────────────────────────────────────────────────────
+function renderCards() {
+  const panel = document.getElementById('info-panel');
+  panel.innerHTML = '';
+  const lang = LANG.current;
+
+  const allPoints = [...POINTS.sedes, ...POINTS.metro, ...POINTS.cultura, ...POINTS.aeropuertos];
+
+  allPoints.forEach(pt => {
+    const name = lang === 'en' ? pt.nameEn : pt.nameEs;
+    const type = lang === 'en' ? pt.typeEn : pt.typeEs;
+    const desc = lang === 'en' ? pt.descEn : pt.descEs;
+
+    const card = document.createElement('div');
+    card.className = 'info-card';
+    card.id = `card-${pt.id}`;
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-icon" style="background:${pt.color}18">${pt.icon}</div>
+        <div>
+          <div class="card-name">${name}</div>
+          <div class="card-category" style="color:${pt.color}">${type}</div>
+        </div>
+      </div>
+      <div class="card-detail">${desc.substring(0, 90)}${desc.length > 90 ? '…' : ''}</div>
+    `;
+    card.onclick = () => flyTo(pt);
+    panel.appendChild(card);
+  });
+}
+
+function selectCard(id) {
+  document.querySelectorAll('.info-card').forEach(c => c.classList.remove('selected'));
+  const card = document.getElementById(`card-${id}`);
+  if (card) { card.classList.add('selected'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+}
+
+function flyTo(pt) {
+  map.flyTo([pt.lat, pt.lng], 15, { animate: true, duration: 1.2 });
+  selectCard(pt.id);
+}
+
+// ── LAYER TOGGLES ─────────────────────────────────────────────────────────────
+function toggleLayer(name) {
+  layerVisible[name] = !layerVisible[name];
+  const sw = document.getElementById(`sw-${name}`);
+  if (layerVisible[name]) {
+    sw.classList.add('on');
+    layers[name].forEach(l => l.addTo(map));
+  } else {
+    sw.classList.remove('on');
+    layers[name].forEach(l => map.removeLayer(l));
+  }
+}
+
+// ── LANGUAGE ──────────────────────────────────────────────────────────────────
+function setLang(lang) {
+  LANG.current = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+
+  // Update all data-es/data-en elements
+  document.querySelectorAll('[data-es]').forEach(el => {
+    el.textContent = lang === 'en' ? el.dataset.en : el.dataset.es;
+  });
+
+  renderMarkers();
+  renderCards();
+}
+
+// ── ITINERARY ─────────────────────────────────────────────────────────────────
+function showItinerary(key) {
+  const itin = ITINERARIES[key];
+  const lang = LANG.current;
+  const title = lang === 'en' ? itin.titleEn : itin.titleEs;
+  const steps = lang === 'en' ? itin.stepsEn : itin.stepsEs;
+
+  document.getElementById('itin-title').textContent = title;
+  const stepsEl = document.getElementById('itin-steps');
+  stepsEl.innerHTML = steps.map((s, i) => `
+    <div class="itin-step">
+      <div class="itin-num">${i+1}</div>
+      <div class="itin-text">${s}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('itinerary-panel').classList.add('show');
+
+  // Highlight relevant markers
+  if (key === 'oriental') {
+    map.flyTo([-34.5770, -58.4050], 13, { animate: true, duration: 1.5 });
+  } else if (key === 'cultural') {
+    map.flyTo([-34.605, -58.373], 14, { animate: true, duration: 1.5 });
+  } else {
+    map.flyTo([-34.566, -58.431], 13.5, { animate: true, duration: 1.5 });
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderMarkers();
+renderCards();
+
+  // Aeropuertos
+  POINTS.aeropuertos.forEach(pt => {
+    const lang = LANG.current;
+    const name = lang === 'en' ? pt.nameEn : pt.nameEs;
+    const type = lang === 'en' ? pt.typeEn : pt.typeEs;
+    const desc = lang === 'en' ? pt.descEn : pt.descEs;
+    const tags = lang === 'en' ? pt.tagsEn : pt.tagsEs;
+    const transport = lang === 'en' ? pt.transporteEn : pt.transporteEs;
+    const btnLabel = lang === 'en' ? '🗺 Get Directions' : '🗺 Cómo llegar';
+
+    const tagsHtml = tags.map(t => `<span class="popup-tag" style="background:${pt.color}18;color:${pt.color}">${t}</span>`).join('');
+
+    const popupContent = `
+      <div>
+        <div class="popup-header">
+          <div class="popup-type" style="color:${pt.color}">${type}</div>
+          <div class="popup-name">${name}</div>
+        </div>
+        <div class="popup-body">
+          <div class="popup-row" style="margin-bottom:8px">${desc}</div>
+          <div class="popup-row"><span class="popup-row-icon">📍</span><span>${pt.address}</span></div>
+          <div class="popup-tags">${tagsHtml}</div>
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(11,31,58,0.08)">${transport}</div>
+          <a href="${pt.gmaps}" target="_blank" class="popup-btn" style="background:${pt.color};color:white">${btnLabel}</a>
+        </div>
+      </div>`;
+
+    const marker = L.marker([pt.lat, pt.lng], {
+      icon: L.divIcon({
+        html: `<div style="width:42px;height:42px;border-radius:8px;background:${pt.color};display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 3px 14px rgba(0,0,0,0.35);border:2px solid white;">✈️</div>`,
+        iconSize: [42, 42],
+        iconAnchor: [21, 42],
+        popupAnchor: [0, -46]
+      })
+    }).bindPopup(popupContent, { className: 'custom-popup', maxWidth: 340 })
+      .on('click', () => selectCard(pt.id));
+    if (layerVisible.aeropuertos) marker.addTo(map);
+    layers.aeropuertos.push(marker);
+  });
+const routeLine = L.polyline(
+  [[-34.5639, -58.4438], [-34.5935, -58.3830]],
+  { color: '#C9A84C', weight: 2, opacity: 0.4, dashArray: '8 6' }
+).addTo(map);
+
+// Add a subtle label at midpoint
+L.marker([-34.5787, -58.4134], {
+  icon: L.divIcon({
+    html: `<div style="background:rgba(201,168,76,0.92);color:#0B1F3A;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;white-space:nowrap;font-family:'DM Sans',sans-serif;letter-spacing:0.04em;box-shadow:0 2px 8px rgba(0,0,0,0.2)">Sede A ↔ Sede B · 4.1km</div>`,
+    iconAnchor: [60, 10],
+    className: ''
+  })
+}).addTo(map);
+
+</script>
+</body>
+</html>
