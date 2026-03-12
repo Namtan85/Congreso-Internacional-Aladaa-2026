@@ -17,8 +17,8 @@
     --white: #FFFFFF;
     --slate: #4A5568;
     --muted: #8A97A8;
-    --sede-a: #1A6B5A;
-    --sede-b: #1A3F6B;
+    --sede-a: #1A3F8F;
+    --sede-b: #7D2232;
     --metro: #D4462A;
     --cultura: #7A3C8E;
     --zona: #2A7A6E;
@@ -531,7 +531,7 @@
     </div>
 
     <div class="layer-toggle" onclick="toggleLayer('sedes')">
-      <div class="layer-dot" style="background:#1A6B5A"></div>
+      <div class="layer-dot" style="background:#1A3F8F"></div>
       <span class="layer-label" data-es="Sedes del Congreso" data-en="Congress Venues">Sedes del Congreso</span>
       <span class="layer-count">4</span>
       <div class="toggle-switch on" id="sw-sedes"></div>
@@ -587,10 +587,10 @@
 <!-- LEGEND -->
 <div id="legend">
   <div class="legend-title" data-es="Referencia" data-en="Legend">Referencia</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#1A6B5A"></div><span data-es="Sede A – Belgrano" data-en="Venue A – Belgrano">Sede A – Belgrano</span></div>
-  <div class="legend-item"><div class="legend-dot" style="background:#1A3F6B"></div><span data-es="Sede B – Austral Centro" data-en="Venue B – Austral Centro">Sede B – Austral Centro</span></div>
-  <div class="legend-item"><div class="legend-dot" style="background:#5B2D8E"></div><span data-es="Sede C – Casa UNLP" data-en="Venue C – Casa UNLP">Sede C – Casa UNLP</span></div>
-  <div class="legend-item"><div class="legend-dot" style="background:#C0392B"></div><span data-es="Sede D – UBA Cs. Sociales" data-en="Venue D – UBA Social Sciences">Sede D – UBA Cs. Sociales</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1A3F8F"></div><span data-es="Sede A – Austral Centro" data-en="Venue A – Austral Centro">Sede A – Austral Centro</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7D2232"></div><span data-es="Sede B – Belgrano" data-en="Venue B – Belgrano">Sede B – Belgrano</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#0D7377"></div><span data-es="Sede C – Casa UNLP" data-en="Venue C – Casa UNLP">Sede C – Casa UNLP</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#4A1060"></div><span data-es="Sede D – UBA Cs. Sociales" data-en="Venue D – UBA Social Sciences">Sede D – UBA Cs. Sociales</span></div>
   <div class="legend-item"><div class="legend-dot" style="background:#D4462A"></div><span data-es="Estación Subte" data-en="Subway Station">Estación Subte</span></div>
   <div class="legend-item"><div class="legend-dot" style="background:#7A3C8E"></div><span data-es="Punto Cultural" data-en="Cultural Point">Punto Cultural</span></div>
   <div class="legend-item"><div class="legend-dot" style="background:#2A7A6E"></div><span data-es="Zona de Interés" data-en="Urban Zone">Zona de Interés</span></div>
@@ -616,17 +616,51 @@ const POINTS = {
       nameEn: 'Universidad de Belgrano',
       lat: -34.5639,
       lng: -58.4438,
-      color: '#1A6B5A',
+      color: '#7D2232',
       icon: '🏛',
       address: 'Zabala 1837, Buenos Aires',
-      typeEs: 'Sede A del Congreso',
-      typeEn: 'Congress Venue A',
-      descEs: 'Sede principal del congreso. Alberga las sesiones plenarias, paneles de apertura y recepción de delegaciones internacionales.',
-      descEn: 'Main congress venue. Hosts plenary sessions, opening panels and reception of international delegations.',
-      metroEs: 'Línea D – Est. Juramento (800m, ~10 min a pie)',
-      metroEn: 'Line D – Juramento Station (800m, ~10 min walk)',
-      tagsEs: ['Sesiones Plenarias', 'Acreditaciones', 'Recepción'],
-      tagsEn: ['Plenary Sessions', 'Accreditation', 'Reception'],
+      typeEs: 'Sede B del Congreso',
+      typeEn: 'Congress Venue B',
+      descEs: 'Sede B del congreso. Jueves 23/4 (8–19 hs): paneles y presentación de libros. Viernes 24/4 (8–19 hs): ponencias y Acto de Cierre del Congreso.',
+      descEn: 'Congress Venue B. Thursday 23/4 (8am–7pm): panels and book presentations. Friday 24/4 (8am–7pm): papers and Closing Ceremony.',
+      metroEs: 'Línea D – Est. Juramento (800m, ~10 min a pie) · Colectivos 29 y 152 (conexión directa con Sede A)',
+      metroEn: 'Line D – Juramento Station (800m, ~10 min walk) · Bus lines 29 & 152 (direct link to Venue A)',
+      tagsEs: ['Sede B', 'Jue 23 · Vie 24', 'Acto de Cierre'],
+      tagsEn: ['Venue B', 'Thu 23 · Fri 24', 'Closing Ceremony'],
+      programaEs: `<div style="font-family:'DM Sans',sans-serif">
+        <div style="font-size:12px;font-weight:700;color:#7D2232;margin-bottom:8px">📅 Programa – Sede B</div>
+        <div style="margin-bottom:8px;padding:9px 11px;background:#FDF2F4;border-radius:8px;border-left:3px solid #7D2232">
+          <div style="font-size:11px;font-weight:700;color:#5c1a27">Jueves 23 de abril</div>
+          <div style="font-size:11px;color:#7D2232;margin-top:3px">🕗 8:00–19:00 hs</div>
+          <div style="font-size:11px;color:#374151;margin-top:3px">Paneles temáticos · Presentación de libros</div>
+        </div>
+        <div style="margin-bottom:8px;padding:9px 11px;background:#FDF2F4;border-radius:8px;border-left:3px solid #7D2232">
+          <div style="font-size:11px;font-weight:700;color:#5c1a27">Viernes 24 de abril</div>
+          <div style="font-size:11px;color:#7D2232;margin-top:3px">🕗 8:00–19:00 hs</div>
+          <div style="font-size:11px;color:#374151;margin-top:3px">Diversas ponencias · <strong>Acto de Cierre del Congreso</strong> al finalizar la jornada</div>
+        </div>
+        <div style="padding:8px 11px;background:#FFF9EC;border-radius:8px;border-left:3px solid #C9A84C">
+          <div style="font-size:11px;font-weight:700;color:#92400E">🚌 Conexión con Sede A (Austral)</div>
+          <div style="font-size:11px;color:#78350F;margin-top:3px">Colectivo <strong>29</strong> y <strong>152</strong> — conectan ambas sedes directamente. Frecuencia regular. Requiere tarjeta SUBE.</div>
+        </div>
+      </div>`,
+      programaEn: `<div style="font-family:'DM Sans',sans-serif">
+        <div style="font-size:12px;font-weight:700;color:#7D2232;margin-bottom:8px">📅 Program – Venue B</div>
+        <div style="margin-bottom:8px;padding:9px 11px;background:#FDF2F4;border-radius:8px;border-left:3px solid #7D2232">
+          <div style="font-size:11px;font-weight:700;color:#5c1a27">Thursday, April 23</div>
+          <div style="font-size:11px;color:#7D2232;margin-top:3px">🕗 8:00–19:00</div>
+          <div style="font-size:11px;color:#374151;margin-top:3px">Thematic panels · Book presentations</div>
+        </div>
+        <div style="margin-bottom:8px;padding:9px 11px;background:#FDF2F4;border-radius:8px;border-left:3px solid #7D2232">
+          <div style="font-size:11px;font-weight:700;color:#5c1a27">Friday, April 24</div>
+          <div style="font-size:11px;color:#7D2232;margin-top:3px">🕗 8:00–19:00</div>
+          <div style="font-size:11px;color:#374151;margin-top:3px">Paper presentations · <strong>Congress Closing Ceremony</strong> at end of day</div>
+        </div>
+        <div style="padding:8px 11px;background:#FFF9EC;border-radius:8px;border-left:3px solid #C9A84C">
+          <div style="font-size:11px;font-weight:700;color:#92400E">🚌 Connection to Venue A (Austral)</div>
+          <div style="font-size:11px;color:#78350F;margin-top:3px">Bus lines <strong>29</strong> and <strong>152</strong> — direct link between both venues. Regular service. Requires SUBE card.</div>
+        </div>
+      </div>`,
       gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Universidad+de+Belgrano+Zabala+1837+Buenos+Aires'
     },
     {
@@ -635,17 +669,51 @@ const POINTS = {
       nameEn: 'Universidad Austral – Downtown',
       lat: -34.5935,
       lng: -58.3830,
-      color: '#1A3F6B',
+      color: '#1A3F8F',
       icon: '🏫',
       address: 'Cerrito 1250, Buenos Aires',
-      typeEs: 'Sede B del Congreso',
-      typeEn: 'Congress Venue B',
-      descEs: 'Sede B. Concentra talleres técnicos, mesas de trabajo y presentación de ponencias en el microcentro porteño.',
-      descEn: 'Venue B. Hosts technical workshops, working tables and paper presentations in the downtown area.',
-      metroEs: 'Línea D – Est. Callao (600m, ~8 min a pie)',
-      metroEn: 'Line D – Callao Station (600m, ~8 min walk)',
-      tagsEs: ['Talleres', 'Ponencias', 'Microcentro'],
-      tagsEn: ['Workshops', 'Papers', 'Downtown'],
+      typeEs: 'Sede A del Congreso',
+      typeEn: 'Congress Venue A',
+      descEs: 'Sede A del congreso. Martes 21/4: Acto de Apertura (9–11 hs) y paneles (13–19 hs). Miércoles 22/4 (8–19 hs): paneles, disertantes y presentación de libros.',
+      descEn: 'Congress Venue A. Tuesday 21/4: Opening Ceremony (9–11am) and panels (1–7pm). Wednesday 22/4 (8am–7pm): panels, speakers and book presentations.',
+      metroEs: 'Línea D – Est. Callao (600m, ~8 min a pie) · Colectivos 29 y 152 (conexión directa con Sede B)',
+      metroEn: 'Line D – Callao Station (600m, ~8 min walk) · Bus lines 29 & 152 (direct link to Venue B)',
+      tagsEs: ['Sede A', 'Mar 21 · Mié 22', 'Acto de Apertura'],
+      tagsEn: ['Venue A', 'Tue 21 · Wed 22', 'Opening Ceremony'],
+      programaEs: `<div style="font-family:'DM Sans',sans-serif">
+        <div style="font-size:12px;font-weight:700;color:#1A3F8F;margin-bottom:8px">📅 Programa – Sede A</div>
+        <div style="margin-bottom:8px;padding:9px 11px;background:#EEF2FF;border-radius:8px;border-left:3px solid #1A3F8F">
+          <div style="font-size:11px;font-weight:700;color:#5c1a27">Martes 21 de abril</div>
+          <div style="font-size:11px;color:#3b5bdb;margin-top:3px">🕘 9:00–11:00 hs · <strong>Acto de Apertura del Congreso</strong></div>
+          <div style="font-size:11px;color:#3b5bdb;margin-top:2px">🕐 13:00–19:00 hs · Paneles temáticos · Presentación de libros</div>
+        </div>
+        <div style="margin-bottom:8px;padding:9px 11px;background:#EEF2FF;border-radius:8px;border-left:3px solid #1A3F8F">
+          <div style="font-size:11px;font-weight:700;color:#5c1a27">Miércoles 22 de abril</div>
+          <div style="font-size:11px;color:#3b5bdb;margin-top:3px">🕗 8:00–19:00 hs</div>
+          <div style="font-size:11px;color:#374151;margin-top:3px">Paneles · Disertantes · Presentación de libros</div>
+        </div>
+        <div style="padding:8px 11px;background:#FFF9EC;border-radius:8px;border-left:3px solid #C9A84C">
+          <div style="font-size:11px;font-weight:700;color:#92400E">🚌 Conexión con Sede B (Belgrano)</div>
+          <div style="font-size:11px;color:#78350F;margin-top:3px">Colectivo <strong>29</strong> y <strong>152</strong> — conectan ambas sedes directamente. Frecuencia regular. Requiere tarjeta SUBE.</div>
+        </div>
+      </div>`,
+      programaEn: `<div style="font-family:'DM Sans',sans-serif">
+        <div style="font-size:12px;font-weight:700;color:#1A3F8F;margin-bottom:8px">📅 Program – Venue A</div>
+        <div style="margin-bottom:8px;padding:9px 11px;background:#EEF2FF;border-radius:8px;border-left:3px solid #1A3F8F">
+          <div style="font-size:11px;font-weight:700;color:#5c1a27">Tuesday, April 21</div>
+          <div style="font-size:11px;color:#3b5bdb;margin-top:3px">🕘 9:00–11:00 · <strong>Congress Opening Ceremony</strong></div>
+          <div style="font-size:11px;color:#3b5bdb;margin-top:2px">🕐 13:00–19:00 · Thematic panels · Book presentations</div>
+        </div>
+        <div style="margin-bottom:8px;padding:9px 11px;background:#EEF2FF;border-radius:8px;border-left:3px solid #1A3F8F">
+          <div style="font-size:11px;font-weight:700;color:#5c1a27">Wednesday, April 22</div>
+          <div style="font-size:11px;color:#3b5bdb;margin-top:3px">🕗 8:00–19:00</div>
+          <div style="font-size:11px;color:#374151;margin-top:3px">Panels · Speakers · Book presentations</div>
+        </div>
+        <div style="padding:8px 11px;background:#FFF9EC;border-radius:8px;border-left:3px solid #C9A84C">
+          <div style="font-size:11px;font-weight:700;color:#92400E">🚌 Connection to Venue B (Belgrano)</div>
+          <div style="font-size:11px;color:#78350F;margin-top:3px">Bus lines <strong>29</strong> and <strong>152</strong> — direct link between both venues. Regular service. Requires SUBE card.</div>
+        </div>
+      </div>`,
       gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Universidad+Austral+Cerrito+1250+Buenos+Aires'
     },
     {
@@ -654,17 +722,35 @@ const POINTS = {
       nameEn: 'Casa UNLP – National University of La Plata',
       lat: -34.6072,
       lng: -58.3918,
-      color: '#5B2D8E',
+      color: '#0D7377',
       icon: '🎓',
       address: 'Ayacucho 132, Buenos Aires',
       typeEs: 'Sede C del Congreso',
       typeEn: 'Congress Venue C',
-      descEs: 'Sede C. Representación porteña de la UNLP. Alberga paneles temáticos y actividades académicas del congreso.',
-      descEn: 'Venue C. Buenos Aires representation of UNLP. Hosts thematic panels and academic congress activities.',
+      descEs: 'Sede C. Miércoles 22/4, Asamblea General Ordinaria de ALADAA (18–21 hs), exclusiva para socios. Actividad institucional del congreso.',
+      descEn: 'Venue C. Wednesday 22/4, ALADAA Ordinary General Assembly (6–9pm), members only. Institutional congress activity.',
       metroEs: 'Línea D – Est. Callao (700m, ~9 min a pie) · Línea B – Est. Callao (400m, ~5 min)',
       metroEn: 'Line D – Callao Station (700m, ~9 min walk) · Line B – Callao Station (400m, ~5 min)',
-      tagsEs: ['Paneles', 'UNLP', 'Sede C'],
-      tagsEn: ['Panels', 'UNLP', 'Venue C'],
+      tagsEs: ['Sede C', 'Mié 22', 'Solo socios'],
+      tagsEn: ['Venue C', 'Wed 22', 'Members only'],
+      programaEs: `<div style="font-family:'DM Sans',sans-serif">
+        <div style="font-size:12px;font-weight:700;color:#0D7377;margin-bottom:8px">📅 Programa – Sede C</div>
+        <div style="padding:9px 11px;background:#E6F4F4;border-radius:8px;border-left:3px solid #0D7377">
+          <div style="font-size:11px;font-weight:700;color:#0A5658">Miércoles 22 de abril</div>
+          <div style="font-size:11px;color:#0D7377;margin-top:3px">🕕 18:00–21:00 hs</div>
+          <div style="font-size:11px;color:#374151;margin-top:3px"><strong>Asamblea General Ordinaria de ALADAA</strong></div>
+          <div style="font-size:10px;color:#0D7377;margin-top:4px;font-style:italic">⚠️ Actividad exclusiva para socios de ALADAA</div>
+        </div>
+      </div>`,
+      programaEn: `<div style="font-family:'DM Sans',sans-serif">
+        <div style="font-size:12px;font-weight:700;color:#0D7377;margin-bottom:8px">📅 Program – Venue C</div>
+        <div style="padding:9px 11px;background:#E6F4F4;border-radius:8px;border-left:3px solid #0D7377">
+          <div style="font-size:11px;font-weight:700;color:#0A5658">Wednesday, April 22</div>
+          <div style="font-size:11px;color:#0D7377;margin-top:3px">🕕 18:00–21:00</div>
+          <div style="font-size:11px;color:#374151;margin-top:3px"><strong>ALADAA Ordinary General Assembly</strong></div>
+          <div style="font-size:10px;color:#0D7377;margin-top:4px;font-style:italic">⚠️ Exclusive activity for ALADAA members</div>
+        </div>
+      </div>`,
       gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Ayacucho+132+Buenos+Aires+Argentina'
     },
     {
@@ -673,17 +759,29 @@ const POINTS = {
       nameEn: 'UBA – Faculty of Social Sciences',
       lat: -34.6005,
       lng: -58.4010,
-      color: '#C0392B',
+      color: '#4A1060',
       icon: '🏛',
-      address: 'Santiago del Estero 1029 / Uriburu 950, Buenos Aires',
+      address: 'Uriburu 950, Buenos Aires',
       typeEs: 'Sede D del Congreso',
       typeEn: 'Congress Venue D',
-      descEs: 'Sede D. Una de las facultades más grandes de América Latina. Alberga conferencias, mesas interdisciplinarias y actividades paralelas del congreso.',
-      descEn: 'Venue D. One of the largest faculties in Latin America. Hosts conferences, interdisciplinary panels and parallel congress activities.',
+      descEs: 'Sede D del congreso. Una de las facultades más grandes de América Latina. Programa a confirmar.',
+      descEn: 'Congress Venue D. One of the largest faculties in Latin America. Program to be confirmed.',
       metroEs: 'Línea D – Est. Callao (900m, ~11 min a pie) · Línea H – Est. Once (600m, ~8 min)',
       metroEn: 'Line D – Callao Station (900m, ~11 min walk) · Line H – Once Station (600m, ~8 min)',
-      tagsEs: ['Conferencias', 'UBA', 'Sede D'],
-      tagsEn: ['Conferences', 'UBA', 'Venue D'],
+      tagsEs: ['Sede D', 'UBA', 'Programa a confirmar'],
+      tagsEn: ['Venue D', 'UBA', 'Program TBC'],
+      programaEs: `<div style="font-family:'DM Sans',sans-serif">
+        <div style="font-size:12px;font-weight:700;color:#4A1060;margin-bottom:8px">📅 Programa – Sede D</div>
+        <div style="padding:9px 11px;background:#F3EDF8;border-radius:8px;border-left:3px solid #4A1060">
+          <div style="font-size:11px;color:#2D0A42;font-style:italic">Programa a confirmar. Esta sede forma parte del congreso y su programación será publicada próximamente.</div>
+        </div>
+      </div>`,
+      programaEn: `<div style="font-family:'DM Sans',sans-serif">
+        <div style="font-size:12px;font-weight:700;color:#4A1060;margin-bottom:8px">📅 Program – Venue D</div>
+        <div style="padding:9px 11px;background:#F3EDF8;border-radius:8px;border-left:3px solid #4A1060">
+          <div style="font-size:11px;color:#2D0A42;font-style:italic">Program to be confirmed. This venue is part of the congress and its schedule will be published soon.</div>
+        </div>
+      </div>`,
       gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Uriburu+950+Buenos+Aires+Argentina'
     }
   ],
@@ -698,10 +796,10 @@ const POINTS = {
       icon: '🚇',
       typeEs: 'Estación de Subte',
       typeEn: 'Subway Station',
-      descEs: 'Línea D (verde). A 800m de la Sede A (U. Belgrano). Referencia: Av. Cabildo. Horario: 5:30–23:30.',
-      descEn: 'Line D (green). 800m from Venue A (U. Belgrano). Reference: Av. Cabildo. Hours: 5:30am–11:30pm.',
-      tagsEs: ['Línea D', '~10 min caminando', 'Sede A'],
-      tagsEn: ['Line D', '~10 min walk', 'Venue A'],
+      descEs: 'Línea D (verde). A 800m de la Sede B (U. Belgrano). Referencia: Av. Cabildo. Horario: 5:30–23:30.',
+      descEn: 'Line D (green). 800m from Venue B (U. Belgrano). Reference: Av. Cabildo. Hours: 5:30am–11:30pm.',
+      tagsEs: ['Línea D', '~10 min caminando', 'Sede B'],
+      tagsEn: ['Line D', '~10 min walk', 'Venue B'],
       gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Subte+Juramento+Buenos+Aires'
     },
     {
@@ -714,10 +812,10 @@ const POINTS = {
       icon: '🚇',
       typeEs: 'Estación de Subte',
       typeEn: 'Subway Station',
-      descEs: 'Línea D (verde). A 1.1km de la Sede A. Próxima al Barrio Chino de Belgrano. Horario: 5:30–23:30.',
-      descEn: 'Line D (green). 1.1km from Venue A. Near Belgrano Chinatown. Hours: 5:30am–11:30pm.',
-      tagsEs: ['Línea D', 'Barrio Chino', 'Sede A'],
-      tagsEn: ['Line D', 'Chinatown', 'Venue A'],
+      descEs: 'Línea D (verde). A 1.1km de la Sede B. Próxima al Barrio Chino de Belgrano. Horario: 5:30–23:30.',
+      descEn: 'Line D (green). 1.1km from Venue B. Near Belgrano Chinatown. Hours: 5:30am–11:30pm.',
+      tagsEs: ['Línea D', 'Barrio Chino', 'Sede B'],
+      tagsEn: ['Line D', 'Chinatown', 'Venue B'],
       gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Barrancas+de+Belgrano+Subte+Buenos+Aires'
     },
     {
@@ -730,10 +828,10 @@ const POINTS = {
       icon: '🚇',
       typeEs: 'Estación de Subte',
       typeEn: 'Subway Station',
-      descEs: 'Línea D (verde). A 600m de la Sede B (U. Austral). Referencia: Cruce Av. Callao–Av. Córdoba. Horario: 5:30–23:30.',
-      descEn: 'Line D (green). 600m from Venue B (U. Austral). Reference: Callao–Córdoba avenues crossing. Hours: 5:30am–11:30pm.',
-      tagsEs: ['Línea D', '~8 min caminando', 'Sede B'],
-      tagsEn: ['Line D', '~8 min walk', 'Venue B'],
+      descEs: 'Línea D (verde). A 600m de la Sede A (U. Austral). Referencia: Cruce Av. Callao–Av. Córdoba. Horario: 5:30–23:30.',
+      descEn: 'Line D (green). 600m from Venue A (U. Austral). Reference: Callao–Córdoba avenues crossing. Hours: 5:30am–11:30pm.',
+      tagsEs: ['Línea D', '~8 min caminando', 'Sede A'],
+      tagsEn: ['Line D', '~8 min walk', 'Venue A'],
       gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Subte+Callao+Linea+D+Buenos+Aires'
     },
     {
@@ -746,8 +844,8 @@ const POINTS = {
       icon: '🚇',
       typeEs: 'Estación de Subte',
       typeEn: 'Subway Station',
-      descEs: 'Línea D (verde). A 900m de la Sede B. Próxima al Teatro Colón y Tribunales. Horario: 5:30–23:30.',
-      descEn: 'Line D (green). 900m from Venue B. Near Teatro Colón and courts. Hours: 5:30am–11:30pm.',
+      descEs: 'Línea D (verde). A 900m de la Sede A. Próxima al Teatro Colón y Tribunales. Horario: 5:30–23:30.',
+      descEn: 'Line D (green). 900m from Venue A. Near Teatro Colón and courts. Hours: 5:30am–11:30pm.',
       tagsEs: ['Línea D', 'Teatro Colón', 'Sede B'],
       tagsEn: ['Line D', 'Teatro Colón', 'Venue B'],
       gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Subte+Tribunales+Buenos+Aires'
@@ -891,38 +989,30 @@ const POINTS = {
         <div style="font-size:13px;font-weight:700;color:#0B1F3A;margin-bottom:10px">🚌 Cómo llegar al centro</div>
         <div style="margin-bottom:10px;padding:10px;background:#FEF3C7;border-radius:8px;border-left:3px solid #B45309">
           <div style="font-size:12px;font-weight:600;color:#92400E">🚌 Manuel Tienda León (recomendado)</div>
-          <div style="font-size:11px;color:#78350F;margin-top:4px">Bus ejecutivo directo hasta Terminal Madero (Puerto Madero) y Retiro. Salidas cada 30 min aprox. Duración: 45–60 min según tráfico. Precio: ~USD 15–18. Ticket en el aeropuerto, planta baja llegadas.</div>
+          <div style="font-size:11px;color:#78350F;margin-top:4px">Bus ejecutivo directo hasta Terminal Madero (Puerto Madero) y Retiro. Salidas cada 30 min aprox. Duración: 45–60 min según el tráfico. Precio: ~USD 15–18. Ticket en el aeropuerto, planta baja, llegadas.</div>
         </div>
-        <div style="margin-bottom:10px;padding:10px;background:#F0FDF4;border-radius:8px;border-left:3px solid #16A34A">
-          <div style="font-size:12px;font-weight:600;color:#15803D">🚌 Bus Urbano 8 (económico)</div>
-          <div style="font-size:11px;color:#166534;margin-top:4px">Línea 8 desde parada frente al aeropuerto hasta Constitución / Once. Duración: 1h 30min–2h. Requiere tarjeta SUBE. Precio: ~$300 ARS.</div>
-        </div>
-        <div style="margin-bottom:10px;padding:10px;background:#EFF6FF;border-radius:8px;border-left:3px solid #1D4ED8">
+          <div style="margin-bottom:10px;padding:10px;background:#FDF2F4;border-radius:8px;border-left:3px solid #1D4ED8">
           <div style="font-size:12px;font-weight:600;color:#1E40AF">🚕 Taxi / Remís oficial</div>
-          <div style="font-size:11px;color:#1e3a8a;margin-top:4px">Taxis oficiales en planta baja, sector llegadas. Precio estimado: $15.000–$25.000 ARS hasta el centro (varía según zona destino). Duración: 35–50 min. Evitar taxis no oficiales.</div>
+          <div style="font-size:11px;color:#5c1a27;margin-top:4px">Taxis oficiales en planta baja, sector llegadas. Precio estimado: $50.000–$60.000 ARS hasta el centro (varía según la zona de destino). Duración: 35–50 min. Evitar taxis no oficiales.</div>
         </div>
-        <div style="padding:10px;background:#F5F3FF;border-radius:8px;border-left:3px solid #7C3AED">
+        <div style="padding:10px;background:#E6F4F4;border-radius:8px;border-left:3px solid #7C3AED">
           <div style="font-size:12px;font-weight:600;color:#6D28D9">📱 Uber / Cabify</div>
-          <div style="font-size:11px;color:#4C1D95;margin-top:4px">Punto de encuentro indicado por la app, zona de estacionamiento. Precio estimado: ~$12.000–$18.000 ARS. Requiere conexión a internet en llegada.</div>
+          <div style="font-size:11px;color:#0A5658;margin-top:4px">Punto de encuentro indicado por la app, zona de estacionamiento. Precio estimado: ~$40.000–$50.000 ARS. Requiere conexión a internet en la llegada.</div>
         </div>
       </div>`,
       transporteEn: `<div style="font-family:'DM Sans',sans-serif;padding:0">
         <div style="font-size:13px;font-weight:700;color:#0B1F3A;margin-bottom:10px">🚌 How to reach downtown</div>
         <div style="margin-bottom:10px;padding:10px;background:#FEF3C7;border-radius:8px;border-left:3px solid #B45309">
           <div style="font-size:12px;font-weight:600;color:#92400E">🚌 Manuel Tienda León (recommended)</div>
-          <div style="font-size:11px;color:#78350F;margin-top:4px">Executive bus to Terminal Madero (Puerto Madero) and Retiro. Departures every ~30 min. Duration: 45–60 min. Price: ~USD 15–18. Ticket at arrivals hall, ground floor.</div>
+          <div style="font-size:11px;color:#78350F;margin-top:4px">Executive bus to Terminal Madero (Puerto Madero) and Retiro. Departures every ~30 min. Duration: 45–60 min. Price: ~USD 15–18. Ticket at the arrivals hall, ground floor.</div>
         </div>
-        <div style="margin-bottom:10px;padding:10px;background:#F0FDF4;border-radius:8px;border-left:3px solid #16A34A">
-          <div style="font-size:12px;font-weight:600;color:#15803D">🚌 City Bus Line 8 (budget)</div>
-          <div style="font-size:11px;color:#166534;margin-top:4px">Line 8 from stop in front of airport to Constitución / Once. Duration: 1h 30min–2h. Requires SUBE card. Price: ~$300 ARS.</div>
-        </div>
-        <div style="margin-bottom:10px;padding:10px;background:#EFF6FF;border-radius:8px;border-left:3px solid #1D4ED8">
+          <div style="margin-bottom:10px;padding:10px;background:#FDF2F4;border-radius:8px;border-left:3px solid #1D4ED8">
           <div style="font-size:12px;font-weight:600;color:#1E40AF">🚕 Official Taxi / Remís</div>
-          <div style="font-size:11px;color:#1e3a8a;margin-top:4px">Official taxis at ground floor, arrivals area. Estimated price: $15,000–$25,000 ARS to downtown. Duration: 35–50 min. Avoid unofficial taxis.</div>
+          <div style="font-size:11px;color:#5c1a27;margin-top:4px">Official taxis at ground floor, arrivals area. Estimated price: $50,000–$60,000 ARS to downtown. Duration: 35–50 min. Avoid unofficial taxis.</div>
         </div>
-        <div style="padding:10px;background:#F5F3FF;border-radius:8px;border-left:3px solid #7C3AED">
+        <div style="padding:10px;background:#E6F4F4;border-radius:8px;border-left:3px solid #7C3AED">
           <div style="font-size:12px;font-weight:600;color:#6D28D9">📱 Uber / Cabify</div>
-          <div style="font-size:11px;color:#4C1D95;margin-top:4px">Pick-up point shown in-app, parking area. Estimated price: ~$12,000–$18,000 ARS. Requires internet connection on arrival.</div>
+          <div style="font-size:11px;color:#0A5658;margin-top:4px">Pick-up point shown in-app, parking area. Estimated price: ~$40,000–$50,000 ARS. Requires an internet connection on arrival.</div>
         </div>
       </div>`,
       gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Aeropuerto+Internacional+Ezeiza+Argentina'
@@ -948,21 +1038,17 @@ const POINTS = {
           <div style="font-size:12px;font-weight:600;color:#92400E">🚌 Manuel Tienda León</div>
           <div style="font-size:11px;color:#78350F;margin-top:4px">Bus directo a Terminal Madero y Retiro. Ticket en el aeropuerto. Duración: 20–30 min. Precio: ~USD 8–10.</div>
         </div>
-        <div style="margin-bottom:10px;padding:10px;background:#F0FDF4;border-radius:8px;border-left:3px solid #16A34A">
-          <div style="font-size:12px;font-weight:600;color:#15803D">🚌 Bus Urbano (colectivo)</div>
-          <div style="font-size:11px;color:#166534;margin-top:4px">Líneas 33, 37 y 45 con parada frente al aeropuerto. Conectan con Palermo, Recoleta, Microcentro. Requiere tarjeta SUBE. Duración: 25–40 min. Precio: ~$300 ARS.</div>
-        </div>
-        <div style="margin-bottom:10px;padding:10px;background:#ECFDF5;border-radius:8px;border-left:3px solid #059669">
-          <div style="font-size:12px;font-weight:600;color:#065F46">🚶 A pie hasta Subte</div>
+         <div style="margin-bottom:10px;padding:10px;background:#ECFDF5;border-radius:8px;border-left:3px solid #059669">
+          <div style="font-size:12px;font-weight:600;color:#5c1a27">🚶 A pie hasta Subte</div>
           <div style="font-size:11px;color:#064E3B;margin-top:4px">15 min a pie hasta est. <strong>Plaza Italia (Línea D)</strong>. Desde allí: 10 min en subte hasta Palermo o Callao (Sede B). Opción ideal para el congreso.</div>
         </div>
-        <div style="margin-bottom:10px;padding:10px;background:#EFF6FF;border-radius:8px;border-left:3px solid #1D4ED8">
+        <div style="margin-bottom:10px;padding:10px;background:#FDF2F4;border-radius:8px;border-left:3px solid #1D4ED8">
           <div style="font-size:12px;font-weight:600;color:#1E40AF">🚕 Taxi / Remís oficial</div>
-          <div style="font-size:11px;color:#1e3a8a;margin-top:4px">Taxis oficiales en salida del aeropuerto. Precio: $4.000–$8.000 ARS al centro. Duración: 15–25 min.</div>
+          <div style="font-size:11px;color:#5c1a27;margin-top:4px">Taxis oficiales en salida del aeropuerto. Precio: $20.000–$25.000 ARS al centro. Duración: 15–25 min.</div>
         </div>
-        <div style="padding:10px;background:#F5F3FF;border-radius:8px;border-left:3px solid #7C3AED">
+        <div style="padding:10px;background:#E6F4F4;border-radius:8px;border-left:3px solid #7C3AED">
           <div style="font-size:12px;font-weight:600;color:#6D28D9">📱 Uber / Cabify</div>
-          <div style="font-size:11px;color:#4C1D95;margin-top:4px">Zona de encuentro en estacionamiento del aeropuerto. Precio estimado: ~$3.500–$6.000 ARS al centro.</div>
+          <div style="font-size:11px;color:#0A5658;margin-top:4px">Zona de encuentro en estacionamiento del aeropuerto. Precio estimado: ~$15.500–$20.000 ARS al centro.</div>
         </div>
       </div>`,
       transporteEn: `<div style="font-family:'DM Sans',sans-serif;padding:0">
@@ -971,21 +1057,17 @@ const POINTS = {
           <div style="font-size:12px;font-weight:600;color:#92400E">🚌 Manuel Tienda León</div>
           <div style="font-size:11px;color:#78350F;margin-top:4px">Direct bus to Terminal Madero and Retiro. Ticket at airport. Duration: 20–30 min. Price: ~USD 8–10.</div>
         </div>
-        <div style="margin-bottom:10px;padding:10px;background:#F0FDF4;border-radius:8px;border-left:3px solid #16A34A">
-          <div style="font-size:12px;font-weight:600;color:#15803D">🚌 City Bus</div>
-          <div style="font-size:11px;color:#166534;margin-top:4px">Lines 33, 37 and 45 stop in front of the airport. Connect to Palermo, Recoleta, Downtown. Requires SUBE card. Duration: 25–40 min. Price: ~$300 ARS.</div>
-        </div>
-        <div style="margin-bottom:10px;padding:10px;background:#ECFDF5;border-radius:8px;border-left:3px solid #059669">
-          <div style="font-size:12px;font-weight:600;color:#065F46">🚶 Walk to Subway</div>
+         <div style="margin-bottom:10px;padding:10px;background:#ECFDF5;border-radius:8px;border-left:3px solid #059669">
+          <div style="font-size:12px;font-weight:600;color:#5c1a27">🚶 Walk to Subway</div>
           <div style="font-size:11px;color:#064E3B;margin-top:4px">15 min walk to <strong>Plaza Italia station (Line D)</strong>. From there: 10 min subway to Palermo or Callao (Venue B). Ideal option for congress attendees.</div>
         </div>
-        <div style="margin-bottom:10px;padding:10px;background:#EFF6FF;border-radius:8px;border-left:3px solid #1D4ED8">
+        <div style="margin-bottom:10px;padding:10px;background:#FDF2F4;border-radius:8px;border-left:3px solid #1D4ED8">
           <div style="font-size:12px;font-weight:600;color:#1E40AF">🚕 Official Taxi / Remís</div>
-          <div style="font-size:11px;color:#1e3a8a;margin-top:4px">Official taxis at airport exit. Price: $4,000–$8,000 ARS to downtown. Duration: 15–25 min.</div>
+          <div style="font-size:11px;color:#5c1a27;margin-top:4px">Official taxis at airport exit. Price: $20,000–$25,000 ARS to downtown. Duration: 15–25 min.</div>
         </div>
-        <div style="padding:10px;background:#F5F3FF;border-radius:8px;border-left:3px solid #7C3AED">
+        <div style="padding:10px;background:#E6F4F4;border-radius:8px;border-left:3px solid #7C3AED">
           <div style="font-size:12px;font-weight:600;color:#6D28D9">📱 Uber / Cabify</div>
-          <div style="font-size:11px;color:#4C1D95;margin-top:4px">Pick-up zone at airport parking area. Estimated price: ~$3,500–$6,000 ARS to downtown.</div>
+          <div style="font-size:11px;color:#0A5658;margin-top:4px">Pick-up zone at airport parking area. Estimated price: ~$15,500–$20,000 ARS to downtown.</div>
         </div>
       </div>`,
       gmaps: 'https://www.google.com/maps/dir/?api=1&destination=Aeroparque+Jorge+Newbery+Buenos+Aires'
@@ -1082,6 +1164,10 @@ function makePopup(pt, layerKey) {
     const metro = lang === 'en' ? pt.metroEn : pt.metroEs;
     extraRows += `<div class="popup-row"><span class="popup-row-icon">🚇</span><span>${metro}</span></div>`;
     extraRows += `<div class="popup-row"><span class="popup-row-icon">📍</span><span>${pt.address}</span></div>`;
+    if (pt.programaEs) {
+      const programa = lang === 'en' ? pt.programaEn : pt.programaEs;
+      extraRows += `<div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(11,31,58,0.08)">${programa}</div>`;
+    }
   } else if (layerKey === 'metro') {
     // no extra
   } else if (layerKey === 'cultura') {
